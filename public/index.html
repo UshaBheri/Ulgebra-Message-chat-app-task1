@@ -196,7 +196,7 @@
             <label for="password">Password:</label>
             <input type="password" id="password" placeholder="Enter Username" required>
             <br />
-            <button type="button" class="btn" id="loginButton">Login</button>
+            <button type="button" class="btn" id="loginButton">Login / Register</button>
         </form>
     </div>
 
@@ -250,6 +250,7 @@
             function login() {
                 const username = document.getElementById('username').value;
                 const password = document.getElementById('password').value;
+                // Check if user enters the credentials or not
                 if (username.trim() === '' || password.trim() === '') {
                     console.log("Please enter both username and password.");
                     return;
@@ -259,14 +260,18 @@
                 if (storedUser && storedUser.password === password) {
                     currentUser = storedUser;
                     console.log("User successfully logged in:", currentUser);
+                    // Display messages for the selected user
                     displayMessages();
+                    // Display the list of users/contacts
                     displayUserList();
+                    // Hides the login page
                     loginContainer.style.display = 'none';
+                    // Shows the messaging page
                     messagingContainer.style.display = 'block';
-                    // Periodically check for new messages
+                    // Periodically check for new messages every 5 seconds
                     setInterval(() => {
                         displayMessages();
-                    }, 1000); // Check every 5 seconds (adjust as needed)
+                    }, 1000);  
                 } else {
                     console.log("Login failed. Creating a new user.");
                     // If the user does not exist, create a new user
@@ -280,35 +285,34 @@
                     console.log("New user created:", currentUser);
                     displayMessages();
                     displayUserList();
+                    //
                     loginContainer.style.display = 'none';
                     messagingContainer.style.display = 'block';
-                    // Periodically check for new messages
+                    // Periodically check for new messages every 5 seconds
                     setInterval(() => {
                         displayMessages();
-                    }, 1000); // Check every 5 seconds (adjust as needed)
+                    }, 1000); 
                 }
                 // Save user information to local storage
                 localStorage.setItem('currentUser', JSON.stringify(currentUser));
-                // Display welcome message and user list
+                
                 displayLoggedInState();
-
-                // Display welcome message
                 welcomeMessage.innerHTML = `<p>Welcome, <span>${currentUser.username}!</span></p>`;
                 // Display user list
                 displayUserListContainer();
-                // Clear input fields
-                $('#username').val(""); // Using JQuery
+                // Clear input fields Using JQuery
+                $('#username').val(""); 
                 $('#password').val("");
-                // Display messages for the selected user
+                
                 displayMessages();
             }
-
+            
+            // Updating the user interface
             function displayLoggedInState() {
                 welcomeMessage.innerHTML = `<p>Welcome, ${currentUser.username}!</p>`;
                 displayUserListContainer();
                 loginContainer.style.display = 'none';
                 messagingContainer.style.display = 'block';
-                // Display messages for the selected user
                 displayMessages();
             }
 
@@ -319,7 +323,8 @@
                     openChat(selectedUser);
                 }
             });
-
+            
+            // Display the users from the dropdown list
             function displayUserListContainer() {
                 userListContainer.innerHTML = '<h1 class="contact">Contacts</h1>';
                 const userListDiv = document.createElement('div');
@@ -338,10 +343,10 @@
                         userListDiv.appendChild(userItem);
                     }
                 }
-
                 userListContainer.appendChild(userListDiv);
             }
-
+            
+            // Sending messages to the selected users
             function sendMessage() {
                 const recipient = userList.value;
                 const messageText = messageInput.value;
@@ -371,15 +376,13 @@
 
                     // Clear previous messages
                     messageList.innerHTML = '';
-
-                    // Display messages for the selected user
                     displayMessages();
                     messageInput.value = '';
                 }
             }
-
+            
+            // Display the chat by selecting the users from users list
             function openChat(recipient) {
-                // Clear previous messages
                 messageList.innerHTML = '';
                 displayMessages();
 
@@ -398,13 +401,13 @@
 
                 // Show the messages for the selected recipient
                 messageList.classList.add('active');
-                // Update the recipient in the message form dropdown
+                // Update the recipient in the message form dropdown 
                 userList.value = recipient;
                 displayMessages();
             }
-
+            
+            // Displaying messages for both sender and recipient
             function displayMessages() {
-                // Clear previous messages
                 messageList.innerHTML = '';
 
                 if (currentUser) {
@@ -419,11 +422,10 @@
                     messageList.classList.add('active');
                 }
             }
-
+            
+            // Displays the messages while sending
             function displayUserMessages(sender, recipient) {
                 const user = JSON.parse(localStorage.getItem(sender));
-
-                // Clear previous messages
                 messageList.innerHTML = '';
 
                 if (user && user.messages) {
@@ -446,13 +448,13 @@
                             } else {
                                 messageItem.innerHTML = `<div class="msg-left"><strong>${message.sender}</strong> <br /> ${message.text} (${message.timestamp})</div> <hr class="line" />`;
                             }
-
                             messageList.appendChild(messageItem);
                         }
                     });
                 }
             }
-
+            
+            // Display the list of users/contacts
             function displayUserList() {
                 userList.innerHTML = '<option value="" disabled selected>Select user</option>';
 
